@@ -1,0 +1,13 @@
+roles:
+- [mon.a, mon.c, osd.0, osd.1, osd.2, osd.3, client.0]
+- [mon.b, mgr.x, osd.4, osd.5, osd.6, osd.7]
+
+overrides:
+  ceph:
+    conf:
+      osd:
+        osd shutdown pgref assert: true
+      global:
+        osd_pool_default_flag_ec_optimizations: true
+    pool-config:
+      ec_pool: true

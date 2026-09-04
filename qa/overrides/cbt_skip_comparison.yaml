@@ -1,0 +1,2 @@
+cbt_regression:
+  skip_comparison: true

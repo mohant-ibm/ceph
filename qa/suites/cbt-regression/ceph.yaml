@@ -1,0 +1,19 @@
+meta:
+- desc: |
+   cbt-regression is a regression testing suite.
+   Should be run on trial-perf machines.
+   On VMs performance results will be inconsistent
+   and can't be compared across runs
+   Use xfs beneath the osds.
+
+tasks:
+- install:
+- ceph:
+    fs: xfs
+    wait-for-scrub: false
+    log-ignorelist:
+      - \(PG_
+      - \(OSD_
+      - \(OBJECT_
+      - overall HEALTH
+- ssh_keys:

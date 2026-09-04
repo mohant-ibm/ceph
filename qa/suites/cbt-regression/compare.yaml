@@ -1,0 +1,4 @@
+cbt_regression:
+  skip_comparison: false
+  tolerance_pct: 10
+  baseline_branch: main

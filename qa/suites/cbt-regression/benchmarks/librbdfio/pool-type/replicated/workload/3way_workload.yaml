@@ -1,0 +1,97 @@
+tasks:
+- exec:
+    client.0:
+      - |
+        set -ex
+        
+        # Create replicated pool for RBD (3-way replication)
+        
+        ceph osd pool create rbd_replicated 64 64 replicated
+        rbd pool init rbd_replicated
+        
+        for i in $(seq 0 15); do
+          rbd create --size 62500 --pool rbd_replicated cbt-librbdfio-${i}
+        done
+
+- cbt:
+    cluster:
+      user: ubuntu
+      osds_per_node: 4
+      iterations: 1
+
+    benchmarks:
+      librbdfio:
+        create_report: True
+        time: 60
+        ramp: 20
+        time_based: True
+        norandommap: True
+        vol_size: 62500
+        use_existing_volumes: True
+        poolname: 'rbd_replicated'
+        rbdname: 'cbt-librbdfio'
+        procs_per_volume: [1]
+        volumes_per_client: [16]
+        osd_ra: [4096]
+        log_iops: True
+        log_bw: True
+        log_lat: True
+        fio_out_format: 'json'
+        log_avg_msec: 100
+        prefill:
+          blocksize: '64k'
+          numjobs: 1
+
+        workloads:
+          precondition:
+            jobname: 'precond1rw'
+            mode: 'randwrite'
+            time: 600
+            op_size: 65536
+            numjobs: [ 1 ]
+            total_iodepth: [ 16 ]
+            monitor: False
+
+          4krandomwrite:
+            jobname: 'randwrite'
+            mode: 'randwrite'
+            op_size: 4096
+            numjobs: [ 1 ]
+            total_iodepth: [ 4, 8, 12, 16, 32, 48, 64, 128, 256, 384 ]
+
+          4krandomread:
+            jobname: 'randread'
+            mode: 'randread'
+            op_size: 4096
+            numjobs: [ 1 ]
+            total_iodepth: [ 4, 8, 12, 16, 32, 48, 64, 128, 256, 384 ]
+
+          256krandomwrite:
+            jobname: 'randwrite'
+            mode: 'randwrite'
+            op_size: 262144
+            numjobs: [ 1 ]
+            total_iodepth: [ 1, 2, 4, 8, 16, 32, 64, 96, 128, 256 ]
+
+          256krandomread:
+            jobname: 'randread'
+            mode: 'randread'
+            op_size: 262144
+            numjobs: [ 1 ]
+            total_iodepth: [ 1, 2, 4, 8, 16, 24, 32, 64, 96, 128 ]
+
+          4Mrandomwrite:
+            jobname: 'randwrite'
+            mode: 'randwrite'
+            op_size: 4194304
+            numjobs: [ 1 ]
+            total_iodepth: [ 1, 2, 3, 4, 6, 8, 16, 24, 32, 48 ]
+
+          4Mrandomread:
+            jobname: 'randread'
+            mode: 'randread'
+            op_size: 4194304
+            numjobs: [ 1 ]
+            total_iodepth: [ 1, 2, 4, 8, 12, 16, 20, 24, 28, 32 ]
+
+- cbt_regression:
