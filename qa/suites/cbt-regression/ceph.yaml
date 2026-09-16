@@ -7,13 +7,10 @@ meta:
    Use xfs beneath the osds.
 
 tasks:
-- install:
-- ceph:
-    fs: xfs
-    wait-for-scrub: false
-    log-ignorelist:
-      - \(PG_
-      - \(OSD_
-      - \(OBJECT_
-      - overall HEALTH
+- cephadm:
+    single_host_defaults: true
+    skip_dashboard: true
+    skip_monitoring_stack: true
+    allow_mismatched_release: true
+    log_to_file: true
 - ssh_keys:
