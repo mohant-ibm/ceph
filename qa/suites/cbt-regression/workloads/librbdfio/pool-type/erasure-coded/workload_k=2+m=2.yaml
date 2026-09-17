@@ -19,14 +19,16 @@ tasks:
         rbd pool init rbd_erasure
         rbd pool init rbd_replicated
 
+        HOST=$(hostname -f)
         for i in $(seq 0 15); do
           rbd create --size 31250 \
             --pool rbd_replicated \
             --data-pool rbd_erasure \
-            cbt-librbdfio-${i}
+            cbt-librbdfio-${HOST}-${i}
         done
 
 - cbt:
+    branch: umbrella
     cluster:
       user: ubuntu
       osds_per_node: 4
@@ -41,6 +43,7 @@ tasks:
         norandommap: True
         vol_size: 31250
         use_existing_volumes: True
+        wait_pgautoscaler_timeout: 20
         poolname: 'rbd_replicated'
         rbdname: 'cbt-librbdfio'
         procs_per_volume: [1]
