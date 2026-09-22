@@ -3,6 +3,7 @@ overrides:
     fs: xfs
     log-ignorelist:
       - \(POOL_APP_NOT_ENABLED\)
+      - \(OSD_DOWN\)
     conf:
       osd:
         osd objectstore: bluestore
