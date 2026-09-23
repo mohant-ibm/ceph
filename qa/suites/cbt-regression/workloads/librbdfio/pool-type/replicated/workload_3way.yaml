@@ -14,18 +14,6 @@ tasks:
           rbd create --size 62500 --pool rbd_replicated cbt-librbdfio-${HOST}-${i}
         done
 
-# Copy matching Ceph shared libraries from the container to the host
-- cephadm.shell:
-    volumes:
-      - /usr/lib/x86_64-linux-gnu:/mnt
-    mon.a:
-      - |
-        set -ex
-        cp /lib64/ceph/libceph-common.so.2 /mnt
-        cp /lib64/librados.so.2            /mnt
-        cp /lib64/librbd.so.1              /mnt
-        cp /lib64/libnbd.so.0              /mnt
-
 - cbt:
     branch: umbrella
     cluster:
