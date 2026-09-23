@@ -4,7 +4,7 @@ tasks:
       - |
         set -ex
         
-        # Create replicated pool for RBD (3-way replication)
+        # Create replicated pool (3-way replication)
         
         ceph osd pool create rbd_replicated 64 64 replicated
         rbd pool init rbd_replicated
@@ -13,6 +13,18 @@ tasks:
         for i in $(seq 0 15); do
           rbd create --size 62500 --pool rbd_replicated cbt-librbdfio-${HOST}-${i}
         done
+
+# Copy matching Ceph shared libraries from the container to the host
+- cephadm.shell:
+    volumes:
+      - /usr/lib/x86_64-linux-gnu:/mnt
+    mon.a:
+      - |
+        set -ex
+        cp /lib64/ceph/libceph-common.so.2 /mnt
+        cp /lib64/librados.so.2            /mnt
+        cp /lib64/librbd.so.1              /mnt
+        cp /lib64/libnbd.so.0              /mnt
 
 - cbt:
     branch: umbrella
@@ -96,7 +108,4 @@ tasks:
           #   numjobs: [ 1 ]
           #   total_iodepth: [ 1, 2, 4, 8, 12, 16, 20, 24, 28, 32 ]
 
-- exec:
-    mon.a:
-      - sleep 7200
       
