@@ -7,11 +7,17 @@ tasks:
         # Create replicated pool (3-way replication)
         
         ceph osd pool create rbd_replicated 64 64 replicated
+        ceph osd pool set rbd_replicated size 3
         rbd pool init rbd_replicated
+
+        ceph osd pool set noautoscale
+        ceph balancer off
+        ceph osd set nodeep-scrub
+        ceph osd set noscrub
         
         HOST=$(hostname -f)
         for i in $(seq 0 15); do
-          rbd create --size 62500 --pool rbd_replicated cbt-librbdfio-${HOST}-${i}
+          rbd create --size 29866 --pool rbd_replicated cbt-librbdfio-${HOST}-${i}
         done
 
 - cbt:
@@ -27,7 +33,7 @@ tasks:
         ramp: 20
         time_based: True
         norandommap: True
-        vol_size: 62500
+        vol_size: 29866
         use_existing_volumes: True
         wait_pgautoscaler_timeout: 30
         poolname: 'rbd_replicated'

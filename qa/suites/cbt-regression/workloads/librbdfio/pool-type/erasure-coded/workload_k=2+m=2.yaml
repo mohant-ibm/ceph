@@ -12,6 +12,7 @@ tasks:
 
         ceph osd pool create rbd_erasure 64 64 erasure reedsol
         ceph osd pool create rbd_replicated 64 64 replicated
+        ceph osd pool set rbd_replicated size 3
 
         ceph osd pool set rbd_erasure allow_ec_overwrites true
         ceph osd pool set rbd_erasure allow_ec_optimizations true
@@ -19,9 +20,14 @@ tasks:
         rbd pool init rbd_erasure
         rbd pool init rbd_replicated
 
+        ceph osd pool set noautoscale
+        ceph balancer off
+        ceph osd set nodeep-scrub
+        ceph osd set noscrub
+
         HOST=$(hostname -f)
         for i in $(seq 0 15); do
-          rbd create --size 31250 \
+          rbd create --size 44800 \
             --pool rbd_replicated \
             --data-pool rbd_erasure \
             cbt-librbdfio-${HOST}-${i}
@@ -41,7 +47,7 @@ tasks:
         ramp: 20
         time_based: True
         norandommap: True
-        vol_size: 31250
+        vol_size: 44800
         use_existing_volumes: True
         wait_pgautoscaler_timeout: 30
         poolname: 'rbd_replicated'
