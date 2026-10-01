@@ -32,6 +32,7 @@ tasks:
       create_pdf: True
       output_directory: "/home/ubuntu/cephtest/archive/cbt/reports/"
       results_file_root: "output"
+      no_error_bars: True
 
     benchmarks:
       librbdfio:
@@ -67,19 +68,19 @@ tasks:
             total_iodepth: [ 16 ]
             monitor: False
 
-          1-4krandomwrite:
-            jobname: 'randwrite'
-            mode: 'randwrite'
-            op_size: 4096
-            numjobs: [ 1 ]
-            total_iodepth: [ 4, 8, 12, 16, 32, 48, 64, 128, 256, 384 ]
+          # 1-4krandomwrite:
+          #   jobname: 'randwrite'
+          #   mode: 'randwrite'
+          #   op_size: 4096
+          #   numjobs: [ 1 ]
+          #   total_iodepth: [ 4, 8, 12, 16, 32, 48, 64, 128, 256, 384 ]
 
-          2-4krandomread:
-            jobname: 'randread'
-            mode: 'randread'
-            op_size: 4096
-            numjobs: [ 1 ]
-            total_iodepth: [ 4, 8, 12, 16, 32, 48, 64, 128, 256, 384 ]
+          # 2-4krandomread:
+          #   jobname: 'randread'
+          #   mode: 'randread'
+          #   op_size: 4096
+          #   numjobs: [ 1 ]
+          #   total_iodepth: [ 4, 8, 12, 16, 32, 48, 64, 128, 256, 384 ]
 
           3-256krandomwrite:
             jobname: 'randwrite'
@@ -95,18 +96,18 @@ tasks:
             numjobs: [ 1 ]
             total_iodepth: [ 1, 2, 4, 8, 16, 24, 32, 64, 96, 128 ]
 
-          5-4Mrandomwrite:
-            jobname: 'randwrite'
-            mode: 'randwrite'
-            op_size: 4194304
-            numjobs: [ 1 ]
-            total_iodepth: [ 1, 2, 3, 4, 6, 8, 16, 24, 32, 48 ]
+          # 5-4Mrandomwrite:
+          #   jobname: 'randwrite'
+          #   mode: 'randwrite'
+          #   op_size: 4194304
+          #   numjobs: [ 1 ]
+          #   total_iodepth: [ 1, 2, 3, 4, 6, 8, 16, 24, 32, 48 ]
 
-          6-4Mrandomread:
-            jobname: 'randread'
-            mode: 'randread'
-            op_size: 4194304
-            numjobs: [ 1 ]
-            total_iodepth: [ 1, 2, 4, 8, 12, 16, 20, 24, 28, 32 ]
+          # 6-4Mrandomread:
+          #   jobname: 'randread'
+          #   mode: 'randread'
+          #   op_size: 4194304
+          #   numjobs: [ 1 ]
+          #   total_iodepth: [ 1, 2, 4, 8, 12, 16, 20, 24, 28, 32 ]
 
       

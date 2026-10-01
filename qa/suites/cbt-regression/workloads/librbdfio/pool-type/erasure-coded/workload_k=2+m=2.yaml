@@ -45,6 +45,7 @@ tasks:
       create_pdf: True
       output_directory: "/home/ubuntu/cephtest/archive/cbt/reports/"
       results_file_root: "output"
+      no_error_bars: True
 
     benchmarks:
       librbdfio:

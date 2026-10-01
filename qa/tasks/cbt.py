@@ -105,7 +105,10 @@ class CBT(Task):
             )
         else:
             install_cmd = ['sudo', 'apt-get', '-y', '--force-yes', 'install']
-            cbt_depends = ['librbd-dev', 'collectl', 'linux-tools-generic', 'python3-venv', 'pandoc', 'texlive']
+            cbt_depends = [
+                'librbd-dev', 'collectl', 'linux-tools-generic', 'python3-venv', 
+                'pandoc', 'texlive', 'texlive-latex-extra'
+            ]
         self.first_mon.run(args=install_cmd + cbt_depends)
 
         # Create a virtual environment for CBT
