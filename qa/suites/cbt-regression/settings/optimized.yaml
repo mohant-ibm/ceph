@@ -14,6 +14,12 @@ overrides:
         debug journal: "0/0"
         debug ms: "0/0"
         debug osd: "0/0"
+        osd op queue: mclock_scheduler
+        osd op queue cut off: high
+        osd mclock profile: balanced
+        osd mclock skip benchmark: true
+        osd mclock max capacity iops ssd: 21500
+        bdev debug aio: false
       global:
 
         debug lockdep: "0/0"
