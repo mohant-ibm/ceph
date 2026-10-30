@@ -1,38 +1,18 @@
+# Shared librbdfio benchmark definition.
+#
+# 'poolname' and 'vol_size' are not set here: they depend on the pool layout
+# and are supplied by the 1-pool-type facet via 'overrides: cbt:'.
+# 'osds_per_node' comes from the 0-cluster facet for the same reason.
+#
+# Note that teuthology's deep_merge *extends* lists rather than replacing
+# them, so a facet cannot override total_iodepth (or any other list) as
+# written. If a pool type or cluster size ever needs different queue depths,
+# set the list to [] here and have every facet supply its own values.
+
 tasks:
-- cephadm.shell:
-    mon.a:
-      - |
-        set -ex
-
-        # Create erasure code profile k=2 m=2
-
-        ceph osd erasure-code-profile set reedsol \
-          plugin=isa k=2 m=2 technique=reed_sol_van stripe_unit=16K \
-          crush-failure-domain=osd
-
-        ceph osd pool create rbd_erasure 64 64 erasure reedsol
-
-        ceph osd pool set rbd_erasure allow_ec_overwrites true
-        ceph osd pool set rbd_erasure allow_ec_optimizations true
-
-        rbd pool init rbd_erasure
-
-        ceph osd pool set noautoscale
-        ceph balancer off
-        ceph osd set nodeep-scrub
-        ceph osd set noscrub
-
-        HOST=$(hostname -f)
-        for i in $(seq 0 15); do
-          rbd create --size 44800 \
-            --pool rbd_erasure \
-            cbt-librbdfio-${HOST}-${i}
-        done
-
 - cbt:
     cluster:
       user: ubuntu
-      osds_per_node: 4
       iterations: 1
 
     benchmarks:
@@ -41,10 +21,8 @@ tasks:
         ramp: 20
         time_based: True
         norandommap: True
-        vol_size: 44800
         use_existing_volumes: True
         wait_pgautoscaler_timeout: 30
-        poolname: 'rbd_erasure'
         rbdname: 'cbt-librbdfio'
         procs_per_volume: [1]
         volumes_per_client: [16]
@@ -109,4 +87,3 @@ tasks:
             op_size: 4194304
             numjobs: [ 1 ]
             total_iodepth: [ 1, 2, 4, 8, 12, 16, 20, 24, 28, 32 ]
-

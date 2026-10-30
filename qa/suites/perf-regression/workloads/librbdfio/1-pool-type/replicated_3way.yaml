@@ -1,0 +1,35 @@
+tasks:
+- cephadm.shell:
+    mon.a:
+      - |
+        set -ex
+
+        # Create replicated pool (3-way replication)
+
+        ceph osd pool create rbd_replicated 64 64 replicated
+        ceph osd pool set rbd_replicated size 3
+        rbd pool init rbd_replicated
+
+        ceph osd pool set noautoscale
+        ceph balancer off
+        ceph osd set nodeep-scrub
+        ceph osd set noscrub
+
+        HOST=$(hostname -f)
+        for i in $(seq 0 15); do
+          rbd create --size 29866 --pool rbd_replicated cbt-librbdfio-${HOST}-${i}
+        done
+
+# The cbt task itself is shared, see 2-benchmark/librbdfio.yaml. Only the
+# values that depend on the pool layout are set here. vol_size is kept next
+# to the 'rbd create --size' above so the two cannot drift apart.
+#
+# 16 vols x 29866 MiB x 3 (replica) == 16 vols x 44800 MiB x 2 (ec 2+2)
+# == 1400 GiB raw, sized for the drives in the trial-perf nodes. Both pool
+# types therefore fill the same amount of raw capacity.
+overrides:
+  cbt:
+    benchmarks:
+      librbdfio:
+        poolname: 'rbd_replicated'
+        vol_size: 29866

@@ -6,3 +6,7 @@ overrides:
     conf:
       osd:
         osd shutdown pgref assert: true
+  cbt:
+    cluster:
+      # must match the number of osds in the roles above
+      osds_per_node: 4
