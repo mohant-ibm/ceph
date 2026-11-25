@@ -182,7 +182,7 @@ class CBT(Task):
     def checkout_cbt(self):
         testdir = misc.get_testdir(self.ctx)
         repo = self.config.get('repo', 'https://github.com/mohant-ibm/cbt.git')
-        branch = self.config.get('branch', 'vampire-cbt-backport-testing-031126')
+        branch = self.config.get('branch', 'wip-mohant-continue-on-error-false-fix')
         branch = self.config.get('force-branch', branch)
         sha1 = self.config.get('sha1')
         if sha1 is None:
